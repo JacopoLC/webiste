@@ -54,7 +54,7 @@ tickers &lt;- table1 %&gt;%
   select(ticker) %&gt;% 
   pull() %&gt;% # pull() gets them as a sting of characters
   c(&quot;SPY&quot;, &quot;^VIX&quot;) # and lets us add SPY, the SP500 ETF, and the VIX index</code></pre>
-<pre class="r"><code># Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
+<pre class="r bg-success"><code># Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
 
 myStocks &lt;- tickers %&gt;% 
   tq_get(get  = &quot;stock.prices&quot;,
@@ -74,7 +74,7 @@ glimpse(myStocks) # examine the structure of the resulting data frame</code></pr
 ## $ volume   &lt;dbl&gt; 2173400, 2713800, 3699400, 5975800, 4101200, 3863800, 2357600~
 ## $ adjusted &lt;dbl&gt; 27.2, 26.1, 26.9, 29.0, 29.6, 29.4, 28.9, 29.0, 29.0, 28.6, 2~</code></pre>
 <p>Financial performance analysis depend on returns; If I buy a stock today for 100 and I sell it tomorrow for 101.75, my one-day return, assuming no transaction costs, is 1.75%. So given the adjusted closing prices, our first step is to calculate daily and monthly returns.</p>
-<pre class="r"><code>#calculate daily returns
+<pre class="r bg-success"><code>#calculate daily returns
 myStocks_returns_daily &lt;- myStocks %&gt;%
   tq_transmute(select     = adjusted, 
                mutate_fun = periodReturn, 
@@ -91,7 +91,7 @@ myStocks_returns_monthly &lt;- myStocks %&gt;%
                type       = &quot;arithmetic&quot;,
                col_rename = &quot;monthly_returns&quot;,
                cols = c(nested.col)) </code></pre>
-<pre class="r"><code>#visualise monthly returns since 2010, for each of the 30 DJIA stocks
+<pre class="r bg-success"><code>#visualise monthly returns since 2010, for each of the 30 DJIA stocks
 myStocks_returns_monthly %&gt;% 
   filter(symbol != &quot;^VIX&quot;, symbol != &quot;SPY&quot;) %&gt;% 
   filter(date &gt;= &quot;2010-01-01&quot;) %&gt;% 
