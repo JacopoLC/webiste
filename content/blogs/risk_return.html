@@ -15,6 +15,14 @@ title: Risk-Return of DJIA stocks
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<style type="text/css">
+.watch-out {
+  background-color: green;
+  border: 3px solid red;
+  font-weight: bold;
+  color: white
+}
+</style>
 <div id="returns-of-financial-stocks" class="section level1">
 <h1>Returns of financial stocks</h1>
 <p>Next, let’s choose the <a href="https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average">Dow Jones Industrial Average (DJIA)</a> stocks and their ticker symbols and download some data. Besides the thirty stocks that make up the DJIA, we will also add <code>SPY</code> which is an SP500 ETF (Exchange Traded Fund).</p>
@@ -54,7 +62,7 @@ tickers &lt;- table1 %&gt;%
   select(ticker) %&gt;% 
   pull() %&gt;% # pull() gets them as a sting of characters
   c(&quot;SPY&quot;, &quot;^VIX&quot;) # and lets us add SPY, the SP500 ETF, and the VIX index</code></pre>
-<pre class="r bg-success"><code># Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
+<pre class="r watch-out"><code># Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
 
 myStocks &lt;- tickers %&gt;% 
   tq_get(get  = &quot;stock.prices&quot;,
@@ -62,7 +70,7 @@ myStocks &lt;- tickers %&gt;%
   group_by(symbol) 
 
 glimpse(myStocks) # examine the structure of the resulting data frame</code></pre>
-<pre><code>## Rows: 167,535
+<pre class="watch-out"><code>## Rows: 167,535
 ## Columns: 8
 ## Groups: symbol [32]
 ## $ symbol   &lt;chr&gt; &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;~
@@ -108,6 +116,6 @@ myStocks_returns_monthly %&gt;%
     x = &quot;Monthly returns (%)&quot;,
     y = &quot;&quot; )+
   NULL</code></pre>
-<p><img src="/blogs/risk_return_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/risk_return_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
 <p><img src="/blogs/risk_return_files/figure-html/risk_return-1.png" width="648" style="display: block; margin: auto;" /></p>
 </div>

@@ -12,7 +12,14 @@ slug: risk_return # slug is the shorthand URL address... no spaces plz
 title: Risk-Return of DJIA stocks
 ---
   
-
+```{css, echo=FALSE}
+.watch-out {
+  background-color: green;
+  border: 3px solid red;
+  font-weight: bold;
+  color: white
+}
+```
 
 
 ```{r, setup, echo=FALSE, class.source="bg-success"}
@@ -96,7 +103,7 @@ tickers <- table1 %>%
 
 
 
-```{r get_price_data, message=FALSE, warning=FALSE, cache=TRUE, class.source="bg-success"}
+```{r get_price_data, message=FALSE, warning=FALSE, cache=TRUE, class.source="watch-out", class.output="watch-out"}
 # Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
 
 myStocks <- tickers %>% 
