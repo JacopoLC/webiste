@@ -14,15 +14,13 @@ title: Risk-Return of DJIA stocks
   
 ```{css, echo=FALSE}
 .watch-out {
-  background-color: green;
-  border: 3px solid red;
-  font-weight: bold;
   color: white
+  font: bold
 }
 ```
 
 
-```{r, setup, echo=FALSE, class.source="bg-success"}
+```{r, setup, echo=FALSE, class.source="watch.out", class.output="watch-out"}
 knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
@@ -60,7 +58,7 @@ Next, let's choose the [Dow Jones Industrial Average (DJIA)](https://en.wikipedi
 
 We will use the `rvest` package to scrape the Wikipedia page for the constituents of DJIA
 
-```{r, tickers_from_wikipedia}
+```{r, tickers_from_wikipedia, class.source="watch.out", class.output="watch-out"}
 
 djia_url <- "https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average"
 
@@ -117,7 +115,7 @@ glimpse(myStocks) # examine the structure of the resulting data frame
 Financial performance analysis depend on returns; If I buy a stock today for 100 and I sell it tomorrow for 101.75, my one-day return, assuming no transaction costs, is 1.75%. So given the adjusted closing prices, our first step is to calculate daily and monthly returns.
 
 
-```{r calculate_returns, message=FALSE, warning=FALSE, cache=TRUE, class.source="bg-success"}
+```{r calculate_returns, message=FALSE, warning=FALSE, cache=TRUE, class.source="watch.out", class.output="watch-out"}
 #calculate daily returns
 myStocks_returns_daily <- myStocks %>%
   tq_transmute(select     = adjusted, 
@@ -137,7 +135,7 @@ myStocks_returns_monthly <- myStocks %>%
                cols = c(nested.col)) 
 ```
 
-```{r, class.source="bg-success"}
+```{r, class.source="bg-success", class.source="watch.out", class.output="watch-out"}
 #visualise monthly returns since 2010, for each of the 30 DJIA stocks
 myStocks_returns_monthly %>% 
   filter(symbol != "^VIX", symbol != "SPY") %>% 
@@ -160,7 +158,7 @@ myStocks_returns_monthly %>%
 ```
 
 
-```{r, risk_return, echo=FALSE}
+```{r, risk_return, echo=FALSE, class.source="watch.out", class.output="watch-out"}
 
 by_year_monthly <- myStocks_returns_monthly %>% 
   mutate(year = year(date),
