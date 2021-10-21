@@ -1,0 +1,196 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:42:51-05:00"
+description: Nullam et orci eu lorem consequat tincidunt vivamus et sagittis magna
+  sed nunc rhoncus condimentum sem. In efficitur ligula tate urna. Maecenas massa
+  sed magna lacinia magna pellentesque lorem ipsum dolor. Nullam et orci eu lorem
+  consequat tincidunt. Vivamus et sagittis tempus.
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: HW_1
+title: HW_1
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest) # to scrape wikipedia page
+library(kableExtra)
+library(fivethirtyeight)
+library(ggrepel)
+```
+
+
+
+# Analysis of movies- IMDB dataset
+
+```{r,load_movies, warning=FALSE, message=FALSE}
+movies <- read_csv(here::here("data", "movies.csv"))
+glimpse(movies)
+skimr::skim(movies)
+
+```
+
+
+## Use your data import, inspection, and cleaning skills to answer the following:
+
+- Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?
+There are no missing values as indicated by the zeros in the "n_missing" column above.
+
+```{r, data inspection}
+## There are no missing values.
+length(unique(movies)) == nrow(movies) #check if there are duplicates by returning true or false
+```
+As seen by the "False" boolean result above, we can say that there are in fact duplicate values (which we remove in the following chunk by taking the unique values)
+
+- Produce a table with the count of movies by genre, ranked in descending order
+```{r}
+
+unique_movies <- movies %>%
+  distinct(title,genre,director,year,.keep_all=TRUE)
+
+number_of_unique_movies <- movies %>%
+  summarise("number of unique movies"=n())
+
+count_movie_genre <- unique_movies %>% 
+  group_by(genre) %>%
+  count(sort=TRUE)
+
+count_movie_genre %>%
+  kable() #need to install package later
+
+colnames(count_movie_genre) <- c("Genre", "Number of Movies")
+
+```
+
+- Produce a table with the average gross earning and budget (`gross` and `budget`) by genre. Calculate a variable `return_on_budget` which shows how many $ did a movie make at the box office for each $ of its budget. Ranked genres by this `return_on_budget` in descending order
+
+```{r, gross earnings and budget}
+return_movies_pergenre <- unique_movies %>%
+  group_by(genre) %>%
+  summarise(mean_gross_earning=mean(gross),mean_budget=mean(budget)) %>%
+  mutate(return_on_budget=(mean_gross_earning-mean_budget)/mean_budget) %>%
+  arrange(-return_on_budget)
+
+return_movies_pergenre
+```
+- Produce a table that shows the top 15 directors who have created the highest gross revenue in the box office. Don't just show the total gross amount, but also the mean, median, and standard deviation per director.
+
+```{r, top directors}
+top_15_directors <- unique_movies %>%
+  select(director,gross) %>%
+  group_by(director) %>%
+  summarise(total_gross=sum(gross),
+            mean_gross=mean(gross),
+            median_gross=median(gross),
+            sd_gross=sd(gross)) %>%
+  top_n(15,total_gross) %>%
+  arrange(-total_gross)
+
+top_15_directors
+```
+- Finally, ratings. Produce a table that describes how ratings are distributed by genre. We don't want just the mean, but also, min, max, median, SD and some kind of a histogram or density graph that visually shows how ratings are distributed. 
+
+```{r, ratings by genre}
+ratings_by_genre <- movies %>%
+  select(genre,rating) %>% 
+  group_by(genre) %>% 
+  summarise (mean_rating =mean(rating),
+             min_rating=min(rating),
+             max_rating=max(rating),
+             median_rating=median(rating),
+             SD_rating=sd(rating)) %>% 
+  arrange(-mean_rating)
+
+ratings_by_genre
+```
+
+```{r, rating by genre - Histogram}
+ggplot(movies, aes(x = rating)) +
+  labs(title="Distribution of movie ratings across all genres", x= "Ratings", y="Count")+ 
+    geom_histogram(binwidth=.5,fill="blue")
+```
+```{r}
+ggplot(movies, aes(x = rating)) +
+  labs(title="Distribution of movie ratings across all genres", x= "Ratings", y="Count")+ 
+    geom_density(fill="blue")
+```
+
+```{r}
+kurtosis(movies$rating)
+skewness(movies$rating)
+```
+
+We can see above from the histogram and smoothed empirical distribution that the data is negatively skewed, and is quite sharp relative to a traditional bell-curve, so we cannot say it is approximately normal. It would be prudent to test this assumption on a larger dataset however. With a kurtosis of less than three, the distribution demonstrates tails which are less "fat" than a normal distribution. The skew is less than zero as expected also. It would be prudent to test the significance of the deviation of the empirical distribution's third and fourth moments from a normal distribution's.
+
+## Use `ggplot` to answer the following
+
+  - Examine the relationship between `gross` and `cast_facebook_likes`. Produce a scatterplot and write one sentence discussing whether the number of facebook likes that the cast has received is likely to be a good predictor of how much money a movie will make at the box office. What variable are you going to map to the Y- and X- axes?
+
+  
+```{r, facebook likes scatterplot}
+ggplot(movies,aes(x=cast_facebook_likes,y=gross,))+
+  labs(title="Correlation between gross and cast's facebook likes", subtitle = "Gross seems to be independent from the cast's facebook likes", x="Cast's facebook likes", y="Gross")+
+  geom_point() 
+  
+```
+There appears to be no significant relationship between gross income and cast facebook likes. We mapped gross on the y-axis and facebook likes on the x, as we are testing facebook likes as a predictor of gross income (dependent variable on y axis written as a function of x-axis/independent variable). 
+
+From the graph above, we would say that the number of facebook likes that the cast has received is unlikely to be a good predictor of how much money a movie will make at the box office.
+
+
+  - Examine the relationship between `gross` and `budget`. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.
+
+```{r, gross_on_budget}
+ggplot(movies,aes(x=budget,y=gross))+
+  labs(title="Relationship between gross and budget", subtitle = "There seems to be a moderate positive relationship between budget and gross", x="Budget", y="Gross")+
+  geom_point() 
+  
+```
+```{r}
+cor(movies$gross,movies$budget)
+```
+
+From the graph above, we would say that budget is likely to be a moderately good predictor of how much money a movie will make at the box office. From the correlation coefficient of 0.641 given above, we can say that there appears to be a significant relationship between the two variables, but it would be prudent to run a significance test on this relationship. We assume causality aswell as it is logical that a movie with a larger budget (i.e. better/more famous actors, more publicity, better special effects etc.) would gross more in the box office. 
+
+  
+  - Examine the relationship between `gross` and `rating`. Produce a scatterplot, faceted by `genre` and discuss whether IMDB ratings are likely to be a good predictor of how much money a movie will make at the box office. Is there anything strange in this dataset?
+
+```{r, gross_on_rating}
+ggplot(movies,aes(x=rating,y=gross))+
+  labs(title="Relationship between gross and rating", subtitle = "There seems to be a positive relation between ratings and gross, with some seeming to
+demonstrate no relationship", x="Rating", y="Gross")+
+  geom_point() +
+  facet_wrap(~genre)
+```
+While some graphs demonstrate positive relationships, as in the overall graph inclusive of all genres, the strength of the relationship varies from strong positive (e.g. Action) to weak positive (e.g. horror) and even non-apparent (e.g. Fantasy). However, some of the genres do not have a sufficient number of data points to infer on. For example, if we are inferring on Family and Western genres above, we are 
+susceptible to interpolation.
