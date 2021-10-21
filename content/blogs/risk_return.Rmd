@@ -14,7 +14,7 @@ title: Risk-Return of DJIA stocks
   
 ```{css, echo=FALSE}
 .watch-out {
-  color: white
+  color: white;
   font: bold
 }
 ```
