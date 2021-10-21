@@ -13,9 +13,16 @@ keywords: ""
 slug: HW_1
 title: HW_1
 ---
+```{css, echo=FALSE}
+.watch-out {
+  background-color: lightgrey;
+  border: 2px solid black;
+  color: white;
+  font-weight: bold
+}
+```
 
-
-```{r, setup, echo=FALSE}
+```{r, setup, echo=FALSE, class.source="watch-out", class.output="watch-out"}
 knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
@@ -32,7 +39,7 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE, class.source="watch-out", class.output="watch-out"}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
 library(mosaic)
 library(ggthemes)
@@ -53,7 +60,7 @@ library(ggrepel)
 
 # Analysis of movies- IMDB dataset
 
-```{r,load_movies, warning=FALSE, message=FALSE}
+```{r,load_movies, warning=FALSE, message=FALSE, class.source="watch-out", class.output="watch-out"}
 movies <- read_csv(here::here("data", "movies.csv"))
 glimpse(movies)
 skimr::skim(movies)
@@ -66,14 +73,14 @@ skimr::skim(movies)
 - Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?
 There are no missing values as indicated by the zeros in the "n_missing" column above.
 
-```{r, data inspection}
+```{r, data inspection, class.source="watch-out", class.output="watch-out"}
 ## There are no missing values.
 length(unique(movies)) == nrow(movies) #check if there are duplicates by returning true or false
 ```
 As seen by the "False" boolean result above, we can say that there are in fact duplicate values (which we remove in the following chunk by taking the unique values)
 
 - Produce a table with the count of movies by genre, ranked in descending order
-```{r}
+```{r, class.source="watch-out", class.output="watch-out"}
 
 unique_movies <- movies %>%
   distinct(title,genre,director,year,.keep_all=TRUE)
@@ -94,7 +101,7 @@ colnames(count_movie_genre) <- c("Genre", "Number of Movies")
 
 - Produce a table with the average gross earning and budget (`gross` and `budget`) by genre. Calculate a variable `return_on_budget` which shows how many $ did a movie make at the box office for each $ of its budget. Ranked genres by this `return_on_budget` in descending order
 
-```{r, gross earnings and budget}
+```{r, gross earnings and budget, class.source="watch-out", class.output="watch-out"}
 return_movies_pergenre <- unique_movies %>%
   group_by(genre) %>%
   summarise(mean_gross_earning=mean(gross),mean_budget=mean(budget)) %>%
@@ -105,7 +112,7 @@ return_movies_pergenre
 ```
 - Produce a table that shows the top 15 directors who have created the highest gross revenue in the box office. Don't just show the total gross amount, but also the mean, median, and standard deviation per director.
 
-```{r, top directors}
+```{r, top directors, class.source="watch-out", class.output="watch-out"}
 top_15_directors <- unique_movies %>%
   select(director,gross) %>%
   group_by(director) %>%
@@ -120,7 +127,7 @@ top_15_directors
 ```
 - Finally, ratings. Produce a table that describes how ratings are distributed by genre. We don't want just the mean, but also, min, max, median, SD and some kind of a histogram or density graph that visually shows how ratings are distributed. 
 
-```{r, ratings by genre}
+```{r, ratings by genre, class.source="watch-out", class.output="watch-out"}
 ratings_by_genre <- movies %>%
   select(genre,rating) %>% 
   group_by(genre) %>% 
@@ -134,7 +141,7 @@ ratings_by_genre <- movies %>%
 ratings_by_genre
 ```
 
-```{r, rating by genre - Histogram}
+```{r, rating by genre - Histogram, class.source="watch-out", class.output="watch-out"}
 ggplot(movies, aes(x = rating)) +
   labs(title="Distribution of movie ratings across all genres", x= "Ratings", y="Count")+ 
     geom_histogram(binwidth=.5,fill="blue")
@@ -145,7 +152,7 @@ ggplot(movies, aes(x = rating)) +
     geom_density(fill="blue")
 ```
 
-```{r}
+```{r, class.source="watch-out", class.output="watch-out"}
 kurtosis(movies$rating)
 skewness(movies$rating)
 ```
@@ -157,7 +164,7 @@ We can see above from the histogram and smoothed empirical distribution that the
   - Examine the relationship between `gross` and `cast_facebook_likes`. Produce a scatterplot and write one sentence discussing whether the number of facebook likes that the cast has received is likely to be a good predictor of how much money a movie will make at the box office. What variable are you going to map to the Y- and X- axes?
 
   
-```{r, facebook likes scatterplot}
+```{r, facebook likes scatterplot, class.source="watch-out", class.output="watch-out"}
 ggplot(movies,aes(x=cast_facebook_likes,y=gross,))+
   labs(title="Correlation between gross and cast's facebook likes", subtitle = "Gross seems to be independent from the cast's facebook likes", x="Cast's facebook likes", y="Gross")+
   geom_point() 
@@ -170,7 +177,7 @@ From the graph above, we would say that the number of facebook likes that the ca
 
   - Examine the relationship between `gross` and `budget`. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.
 
-```{r, gross_on_budget}
+```{r, gross_on_budget, class.source="watch-out", class.output="watch-out"}
 ggplot(movies,aes(x=budget,y=gross))+
   labs(title="Relationship between gross and budget", subtitle = "There seems to be a moderate positive relationship between budget and gross", x="Budget", y="Gross")+
   geom_point() 
@@ -185,7 +192,7 @@ From the graph above, we would say that budget is likely to be a moderately good
   
   - Examine the relationship between `gross` and `rating`. Produce a scatterplot, faceted by `genre` and discuss whether IMDB ratings are likely to be a good predictor of how much money a movie will make at the box office. Is there anything strange in this dataset?
 
-```{r, gross_on_rating}
+```{r, gross_on_rating, class.source="watch-out", class.output="watch-out"}
 ggplot(movies,aes(x=rating,y=gross))+
   labs(title="Relationship between gross and rating", subtitle = "There seems to be a positive relation between ratings and gross, with some seeming to
 demonstrate no relationship", x="Rating", y="Gross")+
