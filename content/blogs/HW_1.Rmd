@@ -1,18 +1,19 @@
 ---
-categories:
-- ""
-- ""
-date: "2017-10-31T22:42:51-05:00"
+title: "HW_1"
+date: '2017-10-31T22:42:51-05:00'
 description: Nullam et orci eu lorem consequat tincidunt vivamus et sagittis magna
   sed nunc rhoncus condimentum sem. In efficitur ligula tate urna. Maecenas massa
   sed magna lacinia magna pellentesque lorem ipsum dolor. Nullam et orci eu lorem
   consequat tincidunt. Vivamus et sagittis tempus.
-draft: false
+draft: no
 image: pic07.jpg
-keywords: ""
+keywords: ''
 slug: HW_1
-title: HW_1
+categories:
+- ''
+- ''
 ---
+
 ```{css, echo=FALSE}
 .watch-out {
   background-color: lightgrey;
@@ -22,7 +23,7 @@ title: HW_1
 }
 ```
 
-```{r, setup, echo=FALSE, class.source="watch-out", class.output="watch-out"}
+```{r, setup, echo=FALSE, class.source="watch-out"}
 knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
@@ -61,7 +62,7 @@ library(ggrepel)
 # Analysis of movies- IMDB dataset
 
 ```{r,load_movies, warning=FALSE, message=FALSE, class.source="watch-out", class.output="watch-out"}
-movies <- read_csv(here::here("data", "movies.csv"))
+movies <- read_csv(here::here("content/data", "movies.csv"))
 glimpse(movies)
 skimr::skim(movies)
 

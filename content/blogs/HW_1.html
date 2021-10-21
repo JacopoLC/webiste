@@ -1,27 +1,35 @@
 ---
-categories:
-- ""
-- ""
-date: "2017-10-31T22:42:51-05:00"
+title: "HW_1"
+date: '2017-10-31T22:42:51-05:00'
 description: Nullam et orci eu lorem consequat tincidunt vivamus et sagittis magna
   sed nunc rhoncus condimentum sem. In efficitur ligula tate urna. Maecenas massa
   sed magna lacinia magna pellentesque lorem ipsum dolor. Nullam et orci eu lorem
   consequat tincidunt. Vivamus et sagittis tempus.
-draft: false
+draft: no
 image: pic07.jpg
-keywords: ""
+keywords: ''
 slug: HW_1
-title: HW_1
+categories:
+- ''
+- ''
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
+<style type="text/css">
+.watch-out {
+  background-color: lightgrey;
+  border: 2px solid black;
+  color: white;
+  font-weight: bold
+}
+</style>
 <div id="analysis-of-movies--imdb-dataset" class="section level1">
 <h1>Analysis of movies- IMDB dataset</h1>
-<pre class="r"><code>movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
+<pre class="r watch-out"><code>movies &lt;- read_csv(here::here(&quot;content/data&quot;, &quot;movies.csv&quot;))
 glimpse(movies)</code></pre>
-<pre><code>## Rows: 2,961
+<pre class="watch-out"><code>## Rows: 2,961
 ## Columns: 11
 ## $ title               &lt;chr&gt; &quot;Avatar&quot;, &quot;Titanic&quot;, &quot;Jurassic World&quot;, &quot;The Avenge~
 ## $ genre               &lt;chr&gt; &quot;Action&quot;, &quot;Drama&quot;, &quot;Action&quot;, &quot;Action&quot;, &quot;Action&quot;, &quot;~
@@ -34,7 +42,7 @@ glimpse(movies)</code></pre>
 ## $ votes               &lt;dbl&gt; 886204, 793059, 418214, 995415, 1676169, 534658, 9~
 ## $ reviews             &lt;dbl&gt; 3777, 2843, 1934, 2425, 5312, 3917, 1752, 1752, 35~
 ## $ rating              &lt;dbl&gt; 7.9, 7.7, 7.0, 8.1, 9.0, 6.5, 8.7, 7.5, 8.5, 7.2, ~</code></pre>
-<pre class="r"><code>skimr::skim(movies)</code></pre>
+<pre class="r watch-out"><code>skimr::skim(movies)</code></pre>
 <table style="width: auto;" class="table table-condensed">
 <caption>
 (#tab:load_movies)Data summary
@@ -558,14 +566,14 @@ rating
 <li>Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?
 There are no missing values as indicated by the zeros in the “n_missing” column above.</li>
 </ul>
-<pre class="r"><code>## There are no missing values.
+<pre class="r watch-out"><code>## There are no missing values.
 length(unique(movies)) == nrow(movies) #check if there are duplicates by returning true or false</code></pre>
-<pre><code>## [1] FALSE</code></pre>
+<pre class="watch-out"><code>## [1] FALSE</code></pre>
 <p>As seen by the “False” boolean result above, we can say that there are in fact duplicate values (which we remove in the following chunk by taking the unique values)</p>
 <ul>
 <li>Produce a table with the count of movies by genre, ranked in descending order</li>
 </ul>
-<pre class="r"><code>unique_movies &lt;- movies %&gt;%
+<pre class="r watch-out"><code>unique_movies &lt;- movies %&gt;%
   distinct(title,genre,director,year,.keep_all=TRUE)
 
 number_of_unique_movies &lt;- movies %&gt;%
@@ -727,18 +735,18 @@ Thriller
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>colnames(count_movie_genre) &lt;- c(&quot;Genre&quot;, &quot;Number of Movies&quot;)</code></pre>
+<pre class="r watch-out"><code>colnames(count_movie_genre) &lt;- c(&quot;Genre&quot;, &quot;Number of Movies&quot;)</code></pre>
 <ul>
 <li>Produce a table with the average gross earning and budget (<code>gross</code> and <code>budget</code>) by genre. Calculate a variable <code>return_on_budget</code> which shows how many $ did a movie make at the box office for each $ of its budget. Ranked genres by this <code>return_on_budget</code> in descending order</li>
 </ul>
-<pre class="r"><code>return_movies_pergenre &lt;- unique_movies %&gt;%
+<pre class="r watch-out"><code>return_movies_pergenre &lt;- unique_movies %&gt;%
   group_by(genre) %&gt;%
   summarise(mean_gross_earning=mean(gross),mean_budget=mean(budget)) %&gt;%
   mutate(return_on_budget=(mean_gross_earning-mean_budget)/mean_budget) %&gt;%
   arrange(-return_on_budget)
 
 return_movies_pergenre</code></pre>
-<pre><code>## # A tibble: 17 x 4
+<pre class="watch-out"><code>## # A tibble: 17 x 4
 ##    genre       mean_gross_earning mean_budget return_on_budget
 ##    &lt;chr&gt;                    &lt;dbl&gt;       &lt;dbl&gt;            &lt;dbl&gt;
 ##  1 Musical              92084000     3189500           27.9   
@@ -761,7 +769,7 @@ return_movies_pergenre</code></pre>
 <ul>
 <li>Produce a table that shows the top 15 directors who have created the highest gross revenue in the box office. Don’t just show the total gross amount, but also the mean, median, and standard deviation per director.</li>
 </ul>
-<pre class="r"><code>top_15_directors &lt;- unique_movies %&gt;%
+<pre class="r watch-out"><code>top_15_directors &lt;- unique_movies %&gt;%
   select(director,gross) %&gt;%
   group_by(director) %&gt;%
   summarise(total_gross=sum(gross),
@@ -772,7 +780,7 @@ return_movies_pergenre</code></pre>
   arrange(-total_gross)
 
 top_15_directors</code></pre>
-<pre><code>## # A tibble: 15 x 5
+<pre class="watch-out"><code>## # A tibble: 15 x 5
 ##    director          total_gross mean_gross median_gross   sd_gross
 ##    &lt;chr&gt;                   &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;
 ##  1 Steven Spielberg   4014061704 174524422.   164435221  101421051.
@@ -793,7 +801,7 @@ top_15_directors</code></pre>
 <ul>
 <li>Finally, ratings. Produce a table that describes how ratings are distributed by genre. We don’t want just the mean, but also, min, max, median, SD and some kind of a histogram or density graph that visually shows how ratings are distributed.</li>
 </ul>
-<pre class="r"><code>ratings_by_genre &lt;- movies %&gt;%
+<pre class="r watch-out"><code>ratings_by_genre &lt;- movies %&gt;%
   select(genre,rating) %&gt;% 
   group_by(genre) %&gt;% 
   summarise (mean_rating =mean(rating),
@@ -804,7 +812,7 @@ top_15_directors</code></pre>
   arrange(-mean_rating)
 
 ratings_by_genre</code></pre>
-<pre><code>## # A tibble: 17 x 6
+<pre class="watch-out"><code>## # A tibble: 17 x 6
 ##    genre       mean_rating min_rating max_rating median_rating SD_rating
 ##    &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;
 ##  1 Biography          7.11        4.5        8.9          7.2      0.760
@@ -824,18 +832,18 @@ ratings_by_genre</code></pre>
 ## 15 Horror             5.83        3.6        8.5          5.9      1.01 
 ## 16 Western            5.7         4.1        7.3          5.7      2.26 
 ## 17 Thriller           4.8         4.8        4.8          4.8     NA</code></pre>
-<pre class="r"><code>ggplot(movies, aes(x = rating)) +
+<pre class="r watch-out"><code>ggplot(movies, aes(x = rating)) +
   labs(title=&quot;Distribution of movie ratings across all genres&quot;, x= &quot;Ratings&quot;, y=&quot;Count&quot;)+ 
     geom_histogram(binwidth=.5,fill=&quot;blue&quot;)</code></pre>
 <p><img src="/blogs/HW_1_files/figure-html/rating%20by%20genre%20-%20Histogram-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(movies, aes(x = rating)) +
   labs(title=&quot;Distribution of movie ratings across all genres&quot;, x= &quot;Ratings&quot;, y=&quot;Count&quot;)+ 
     geom_density(fill=&quot;blue&quot;)</code></pre>
-<p><img src="/blogs/HW_1_files/figure-html/unnamed-chunk-2-1.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>kurtosis(movies$rating)</code></pre>
-<pre><code>## [1] 1.11</code></pre>
-<pre class="r"><code>skewness(movies$rating)</code></pre>
-<pre><code>## [1] -0.657</code></pre>
+<p><img src="/blogs/HW_1_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r watch-out"><code>kurtosis(movies$rating)</code></pre>
+<pre class="watch-out"><code>## [1] 1.11</code></pre>
+<pre class="r watch-out"><code>skewness(movies$rating)</code></pre>
+<pre class="watch-out"><code>## [1] -0.657</code></pre>
 <p>We can see above from the histogram and smoothed empirical distribution that the data is negatively skewed, and is quite sharp relative to a traditional bell-curve, so we cannot say it is approximately normal. It would be prudent to test this assumption on a larger dataset however. With a kurtosis of less than three, the distribution demonstrates tails which are less “fat” than a normal distribution. The skew is less than zero as expected also. It would be prudent to test the significance of the deviation of the empirical distribution’s third and fourth moments from a normal distribution’s.</p>
 </div>
 <div id="use-ggplot-to-answer-the-following" class="section level2">
@@ -843,7 +851,7 @@ ratings_by_genre</code></pre>
 <ul>
 <li>Examine the relationship between <code>gross</code> and <code>cast_facebook_likes</code>. Produce a scatterplot and write one sentence discussing whether the number of facebook likes that the cast has received is likely to be a good predictor of how much money a movie will make at the box office. What variable are you going to map to the Y- and X- axes?</li>
 </ul>
-<pre class="r"><code>ggplot(movies,aes(x=cast_facebook_likes,y=gross,))+
+<pre class="r watch-out"><code>ggplot(movies,aes(x=cast_facebook_likes,y=gross,))+
   labs(title=&quot;Correlation between gross and cast&#39;s facebook likes&quot;, subtitle = &quot;Gross seems to be independent from the cast&#39;s facebook likes&quot;, x=&quot;Cast&#39;s facebook likes&quot;, y=&quot;Gross&quot;)+
   geom_point() </code></pre>
 <p><img src="/blogs/HW_1_files/figure-html/facebook%20likes%20scatterplot-1.png" width="648" style="display: block; margin: auto;" />
@@ -852,7 +860,7 @@ There appears to be no significant relationship between gross income and cast fa
 <ul>
 <li>Examine the relationship between <code>gross</code> and <code>budget</code>. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.</li>
 </ul>
-<pre class="r"><code>ggplot(movies,aes(x=budget,y=gross))+
+<pre class="r watch-out"><code>ggplot(movies,aes(x=budget,y=gross))+
   labs(title=&quot;Relationship between gross and budget&quot;, subtitle = &quot;There seems to be a moderate positive relationship between budget and gross&quot;, x=&quot;Budget&quot;, y=&quot;Gross&quot;)+
   geom_point() </code></pre>
 <p><img src="/blogs/HW_1_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
@@ -862,7 +870,7 @@ There appears to be no significant relationship between gross income and cast fa
 <ul>
 <li>Examine the relationship between <code>gross</code> and <code>rating</code>. Produce a scatterplot, faceted by <code>genre</code> and discuss whether IMDB ratings are likely to be a good predictor of how much money a movie will make at the box office. Is there anything strange in this dataset?</li>
 </ul>
-<pre class="r"><code>ggplot(movies,aes(x=rating,y=gross))+
+<pre class="r watch-out"><code>ggplot(movies,aes(x=rating,y=gross))+
   labs(title=&quot;Relationship between gross and rating&quot;, subtitle = &quot;There seems to be a positive relation between ratings and gross, with some seeming to
 demonstrate no relationship&quot;, x=&quot;Rating&quot;, y=&quot;Gross&quot;)+
   geom_point() +
